@@ -124,7 +124,7 @@ void lily_spawni_Interpreter_parse_file(lily_state *s)
             (lily_spawni_interpreter *)lily_arg_generic(s, 0);
     char *filename = lily_arg_string_raw(s, 1);
 
-    lily_return_integer(s, lily_parse_file(lsi->subi, filename));
+    lily_return_boolean(s, lily_parse_file(lsi->subi, filename));
 }
 
 /**
@@ -140,6 +140,6 @@ void lily_spawni_Interpreter_parse_string(lily_state *s)
     char *context = lily_arg_string_raw(s, 1);
     char *text = lily_arg_string_raw(s, 2);
 
-    lily_return_integer(s, lily_parse_string(lsi->subi, context, text));
+    lily_return_boolean(s, lily_parse_string(lsi->subi, context, text));
 }
 #include "dyna_spawni.h"
