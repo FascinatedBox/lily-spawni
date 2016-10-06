@@ -68,6 +68,21 @@ void lily_spawni_Interpreter_error(lily_state *s)
 }
 
 /**
+method Interpreter.error_message(self: Interpreter): String
+
+Get just the error message of the last parse as a `String`. If there is no
+error, then the result is an empty `String`.
+*/
+void lily_spawni_Interpreter_error_message(lily_state *s)
+{
+    lily_spawni_interpreter *lsi =
+            (lily_spawni_interpreter *)lily_arg_generic(s, 0);
+
+    lily_return_string(s,
+            lily_new_raw_string(lily_get_error_message(lsi->subi)));
+}
+
+/**
 method Interpreter.parse_expr(self: Interpreter, context: String, data: String): Option[String]
 
 This parses 'data' as an expression that has a result.

@@ -25,6 +25,11 @@ failure.
 Returns the error (message and traceback) from the last parse. If there was no
 error, then the result is an empty `String`.
 
+`method Interpreter.error_message: String`
+
+Get just the error message of the last parse as a `String`. If there is no
+error, then the result is an empty `String`.
+
 `method Interpreter.parse_expr(context: String, data: String): Option[String]`
 
 Parse an expression that should return a value. 'context' is used as the
