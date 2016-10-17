@@ -46,11 +46,10 @@ void lily_spawni_Interpreter_new(lily_state *s)
 
     lily_spawni_interpreter *lsi = lily_malloc(sizeof(lily_spawni_interpreter));
     lsi->refcount = 0;
-    lsi->instance_id = CID_INTERPRETER;
     lsi->subi = lily_new_state(lily_new_default_options());
     lsi->destroy_func = destroy_interpreter;
 
-    lily_return_foreign(s, (lily_foreign_val *)lsi);
+    lily_return_foreign(s, CID_INTERPRETER, (lily_foreign_val *)lsi);
 }
 
 /**
@@ -104,12 +103,12 @@ void lily_spawni_Interpreter_parse_expr(lily_state *s)
     int ok = lily_parse_expr(lsi->subi, context, text, &out_text);
 
     if (ok) {
-        lily_instance_val *somev = lily_new_some();
+        lily_instance_val *somev = lily_new_enum_n(1);
         lily_variant_set_string(somev, 0, lily_new_raw_string(out_text));
-        lily_return_filled_variant(s, somev);
+        lily_return_filled_variant(s, LILY_SOME_ID, somev);
     }
     else
-        lily_return_empty_variant(s, lily_get_none(s));
+        lily_return_empty_variant(s, LILY_NONE_ID);
 }
 
 /**
