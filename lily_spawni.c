@@ -8,6 +8,9 @@
 package spawni
 
 Provide an interpreter as a value, so you can interpret while you interpret.
+This can be installed using Lily's `garden` via:
+
+`garden install github FascinatedBox/spawni`
 */
 
 #define CID_INTERPRETER cid_table[0]
@@ -84,7 +87,7 @@ void lily_spawni_Interpreter_error_message(lily_state *s)
 /**
 method Interpreter.parse_expr(self: Interpreter, context: String, data: String): Option[String]
 
-This parses 'data' as an expression that has a result.
+This parses `data` as an expression that has a result.
 
 On success, a `Some` is returned with the result of the expression turned into a
 `String`. The `String` may be empty if the expression returned an empty result.
@@ -114,7 +117,7 @@ void lily_spawni_Interpreter_parse_expr(lily_state *s)
 /**
 method Interpreter.parse_file(self: Interpreter, filename: String): Boolean
 
-This attempts to open 'filename' and parse it. If parsing succeeds, then the
+This attempts to open `filename` and parse it. If parsing succeeds, then the
 interpreter will attempt to execute the instructions.
 */
 void lily_spawni_Interpreter_parse_file(lily_state *s)
@@ -129,7 +132,7 @@ void lily_spawni_Interpreter_parse_file(lily_state *s)
 /**
 method Interpreter.parse_string(self: Interpreter, context: String, data: String): Boolean
 
-This parses the content of 'data' as-is. 'context' is used as the source
+This parses the content of `data` as-is. `context` is used as the source
 filename in the event of an error.
 */
 void lily_spawni_Interpreter_parse_string(lily_state *s)

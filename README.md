@@ -1,46 +1,49 @@
 # spawni
 
-### Version: 0.1
-
-This package provides a wrapper over an interpreter.
-
-You can install this package via
+Provide an interpreter as a value, so you can interpret while you interpret.
+This can be installed using Lily's `garden` via:
 
 `garden install github FascinatedBox/spawni`
 
-and then use it like so
+## class Interpreter
 
-`import spawni`
+This class wraps over an interpreter, providing useful methods.
 
-## Classes
+### constructor Interpreter`: Interpreter`
 
-#### `class Interpreter`
+Constructs a new `Interpreter`. This operation does not have any side-effects,
+except the underlying allocation required. It is therefore possible to create as
+many `Interpreter` instances as one may need.
 
-This class provides a wrapper around a Lily interpreter. This class provides a
-constructor that does not take arguments. The parse methods will rewind state on
-failure.
+The parse methods of this class will all execute code on success. On failure,
+they will rewind state. In theory, variables declared in a failed parse should
+not be available to subsequent passes.
 
-`method Interpreter.error: String`
+### method Interpreter.error`(self: Interpreter): String`
 
-Returns the error (message and traceback) from the last parse. If there was no
-error, then the result is an empty `String`.
+Get the full error (message and traceback) from the last parse. If there is no
+error, then the result is a `String`.
 
-`method Interpreter.error_message: String`
+### method Interpreter.error_message`(self: Interpreter): String`
 
 Get just the error message of the last parse as a `String`. If there is no
 error, then the result is an empty `String`.
 
-`method Interpreter.parse_expr(context: String, data: String): Option[String]`
+### method Interpreter.parse_expr`(self: Interpreter, context: String, data: String): Option[String]`
 
-Parse an expression that should return a value. 'context' is used as the
-filename in the event of an error. The result is a `Some` containing the
-expression's value into a `String`, or `None`.
+This parses `data` as an expression that has a result.
 
-`method Interpreter.parse_file(filename: String): Boolean`
+On success, a `Some` is returned with the result of the expression turned into a
+`String`. The `String` may be empty if the expression returned an empty result.
 
-Try to open 'filename', parse the contents, and execute them.
+On failure, a `None` is returned.
 
-`method Interpreter.parse_string(context: String, data: String): Boolean`
+### method Interpreter.parse_file`(self: Interpreter, filename: String): Boolean`
 
-Similar to 'parse_expr', except that the contents are not limited to a single
-expression.
+This attempts to open `filename` and parse it. If parsing succeeds, then the
+interpreter will attempt to execute the instructions.
+
+### method Interpreter.parse_string`(self: Interpreter, context: String, data: String): Boolean`
+
+This parses the content of `data` as-is. `context` is used as the source
+filename in the event of an error.
