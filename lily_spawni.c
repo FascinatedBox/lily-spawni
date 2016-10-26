@@ -21,7 +21,7 @@ class Interpreter
 This class wraps over an interpreter, providing useful methods.
 */
 typedef struct {
-    LILY_FOREIGN_HEADER_PADDED
+    LILY_FOREIGN_HEADER
     lily_state *subi;
 } lily_spawni_interpreter;
 
