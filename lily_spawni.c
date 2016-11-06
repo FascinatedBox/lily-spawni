@@ -4,6 +4,8 @@
 #include "lily_api_msgbuf.h"
 #include "lily_api_value.h"
 
+#include "extras_spawni.h"
+
 /**
 package spawni
 
@@ -13,8 +15,6 @@ This can be installed using Lily's `garden` via:
 `garden install github FascinatedBox/spawni`
 */
 
-#define CID_INTERPRETER cid_table[0]
-
 /**
 class Interpreter
 
@@ -23,11 +23,11 @@ This class wraps over an interpreter, providing useful methods.
 typedef struct {
     LILY_FOREIGN_HEADER
     lily_state *subi;
-} lily_spawni_interpreter;
+} lily_spawni_Interpreter;
 
-static void destroy_interpreter(lily_generic_val *g)
+static void destroy_Interpreter(lily_generic_val *g)
 {
-    lily_spawni_interpreter *lsi = (lily_spawni_interpreter *)g;
+    lily_spawni_Interpreter *lsi = (lily_spawni_Interpreter *)g;
     lily_free_state(lsi->subi);
     lily_free(g);
 }
@@ -45,14 +45,11 @@ not be available to subsequent passes.
 */
 void lily_spawni_Interpreter_new(lily_state *s)
 {
-    uint16_t *cid_table = lily_get_cid_table(s);
-
-    lily_spawni_interpreter *lsi = lily_malloc(sizeof(lily_spawni_interpreter));
-    lsi->refcount = 0;
+    lily_spawni_Interpreter *lsi;
+    INIT_Interpreter(s, lsi); 
     lsi->subi = lily_new_state(lily_new_default_options());
-    lsi->destroy_func = destroy_interpreter;
 
-    lily_return_foreign(s, CID_INTERPRETER, (lily_foreign_val *)lsi);
+    lily_return_foreign(s, ID_Interpreter(s), (lily_foreign_val *)lsi);
 }
 
 /**
@@ -63,8 +60,7 @@ error, then the result is a `String`.
 */
 void lily_spawni_Interpreter_error(lily_state *s)
 {
-    lily_spawni_interpreter *lsi =
-            (lily_spawni_interpreter *)lily_arg_generic(s, 0);
+    lily_spawni_Interpreter *lsi = ARG_Interpreter(s, 0);
 
     lily_return_string(s, lily_new_raw_string(lily_get_error(lsi->subi)));
 }
@@ -77,8 +73,7 @@ error, then the result is an empty `String`.
 */
 void lily_spawni_Interpreter_error_message(lily_state *s)
 {
-    lily_spawni_interpreter *lsi =
-            (lily_spawni_interpreter *)lily_arg_generic(s, 0);
+    lily_spawni_Interpreter *lsi = ARG_Interpreter(s, 0);
 
     lily_return_string(s,
             lily_new_raw_string(lily_get_error_message(lsi->subi)));
@@ -96,8 +91,7 @@ On failure, a `None` is returned.
 */
 void lily_spawni_Interpreter_parse_expr(lily_state *s)
 {
-    lily_spawni_interpreter *lsi =
-            (lily_spawni_interpreter *)lily_arg_generic(s, 0);
+    lily_spawni_Interpreter *lsi = ARG_Interpreter(s, 0);
     char *context = lily_arg_string_raw(s, 1);
     char *text = lily_arg_string_raw(s, 2);
     lily_value *value;
@@ -122,8 +116,7 @@ interpreter will attempt to execute the instructions.
 */
 void lily_spawni_Interpreter_parse_file(lily_state *s)
 {
-    lily_spawni_interpreter *lsi =
-            (lily_spawni_interpreter *)lily_arg_generic(s, 0);
+    lily_spawni_Interpreter *lsi = ARG_Interpreter(s, 0);
     char *filename = lily_arg_string_raw(s, 1);
 
     lily_return_boolean(s, lily_parse_file(lsi->subi, filename));
@@ -137,8 +130,7 @@ filename in the event of an error.
 */
 void lily_spawni_Interpreter_parse_string(lily_state *s)
 {
-    lily_spawni_interpreter *lsi =
-            (lily_spawni_interpreter *)lily_arg_generic(s, 0);
+    lily_spawni_Interpreter *lsi = ARG_Interpreter(s, 0);
     char *context = lily_arg_string_raw(s, 1);
     char *text = lily_arg_string_raw(s, 2);
 
