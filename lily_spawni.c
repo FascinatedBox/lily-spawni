@@ -62,7 +62,7 @@ void lily_spawni_Interpreter_error(lily_state *s)
 {
     lily_spawni_Interpreter *lsi = ARG_Interpreter(s, 0);
 
-    lily_return_string(s, lily_new_raw_string(lily_get_error(lsi->subi)));
+    lily_return_string(s, lily_new_string(lily_get_error(lsi->subi)));
 }
 
 /**
@@ -76,7 +76,7 @@ void lily_spawni_Interpreter_error_message(lily_state *s)
     lily_spawni_Interpreter *lsi = ARG_Interpreter(s, 0);
 
     lily_return_string(s,
-            lily_new_raw_string(lily_get_error_message(lsi->subi)));
+            lily_new_string(lily_get_error_message(lsi->subi)));
 }
 
 /**
@@ -100,9 +100,9 @@ void lily_spawni_Interpreter_parse_expr(lily_state *s)
     int ok = lily_parse_expr(lsi->subi, context, text, &out_text);
 
     if (ok) {
-        lily_instance_val *somev = lily_new_enum_n(1);
-        lily_variant_set_string(somev, 0, lily_new_raw_string(out_text));
-        lily_return_filled_variant(s, LILY_SOME_ID, somev);
+        lily_variant_val *somev = lily_new_variant(1);
+        lily_variant_set_string(somev, 0, lily_new_string(out_text));
+        lily_return_variant(s, LILY_SOME_ID, somev);
     }
     else
         lily_return_empty_variant(s, LILY_NONE_ID);
