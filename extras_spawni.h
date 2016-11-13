@@ -7,4 +7,4 @@
 #define INIT_Interpreter(state, target) \
 target = lily_malloc(sizeof(lily_spawni_Interpreter)); \
 target->refcount = 0; \
-target->destroy_func = destroy_Interpreter;
+target->destroy_func = (lily_destroy_func)destroy_Interpreter;

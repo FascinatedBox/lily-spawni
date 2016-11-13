@@ -25,11 +25,10 @@ typedef struct {
     lily_state *subi;
 } lily_spawni_Interpreter;
 
-static void destroy_Interpreter(lily_generic_val *g)
+static void destroy_Interpreter(lily_spawni_Interpreter *lsi)
 {
-    lily_spawni_Interpreter *lsi = (lily_spawni_Interpreter *)g;
     lily_free_state(lsi->subi);
-    lily_free(g);
+    lily_free(lsi);
 }
 
 /**
