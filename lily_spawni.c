@@ -46,7 +46,7 @@ void lily_spawni_Interpreter_new(lily_state *s)
 {
     lily_spawni_Interpreter *lsi;
     INIT_Interpreter(s, lsi); 
-    lsi->subi = lily_new_state(lily_new_default_options());
+    lsi->subi = lily_new_state(lily_new_options());
 
     lily_return_foreign(s, ID_Interpreter(s), (lily_foreign_val *)lsi);
 }
