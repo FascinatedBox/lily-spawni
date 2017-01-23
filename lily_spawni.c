@@ -1,5 +1,3 @@
-#include "lily_api_alloc.h"
-#include "lily_api_code_iter.h"
 #include "lily_api_embed.h"
 #include "lily_api_msgbuf.h"
 #include "lily_api_value.h"
@@ -28,7 +26,6 @@ typedef struct {
 static void destroy_Interpreter(lily_spawni_Interpreter *lsi)
 {
     lily_free_state(lsi->subi);
-    lily_free(lsi);
 }
 
 /**
@@ -44,11 +41,10 @@ not be available to subsequent passes.
 */
 void lily_spawni_Interpreter_new(lily_state *s)
 {
-    lily_spawni_Interpreter *lsi;
-    INIT_Interpreter(s, lsi); 
+    lily_spawni_Interpreter *lsi = INIT_Interpreter(s);
     lsi->subi = lily_new_state(lily_new_options());
 
-    lily_return_foreign(s, ID_Interpreter(s), (lily_foreign_val *)lsi);
+    lily_return_foreign(s, (lily_foreign_val *)lsi);
 }
 
 /**
@@ -99,12 +95,12 @@ void lily_spawni_Interpreter_parse_expr(lily_state *s)
     int ok = lily_parse_expr(lsi->subi, context, text, &out_text);
 
     if (ok) {
-        lily_variant_val *somev = lily_new_variant(1);
-        lily_variant_set_string(somev, 0, lily_new_string(out_text));
-        lily_return_variant(s, LILY_SOME_ID, somev);
+        lily_container_val *somev = lily_new_some();
+        lily_nth_set(somev, 0, lily_box_string(s, lily_new_string(out_text)));
+        lily_return_variant(s, somev);
     }
     else
-        lily_return_empty_variant(s, LILY_NONE_ID);
+        lily_return_none(s);
 }
 
 /**
