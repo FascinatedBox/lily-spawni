@@ -95,6 +95,9 @@ void lily_spawni_Interpreter_parse_expr(lily_state *s)
     int ok = lily_parse_expr(lsi->subi, context, text, &out_text);
 
     if (ok) {
+        if (out_text == NULL)
+            out_text = "";
+
         lily_container_val *somev = lily_new_some();
         lily_nth_set(somev, 0, lily_box_string(s, lily_new_string(out_text)));
         lily_return_variant(s, somev);
