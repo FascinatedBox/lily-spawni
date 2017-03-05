@@ -7,5 +7,5 @@
 #define ID_Interpreter(state) lily_cid_at(state, 0)
 
 #define INIT_Interpreter(state) \
-(lily_spawni_Interpreter *)lily_new_foreign(state, ID_Interpreter(s), (lily_destroy_func)destroy_Interpreter, sizeof(lily_spawni_Interpreter *))
+(lily_spawni_Interpreter *)lily_new_foreign(state, ID_Interpreter(s), (lily_destroy_func)destroy_Interpreter, sizeof(lily_spawni_Interpreter))
 
