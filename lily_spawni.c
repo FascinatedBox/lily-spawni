@@ -1,44 +1,79 @@
-#include "lily_api_embed.h"
-#include "lily_api_msgbuf.h"
-#include "lily_api_value.h"
-
-#include "extras_spawni.h"
-
 /**
-package spawni
+library spawni
 
 Provide an interpreter as a value, so you can interpret while you interpret.
 This can be installed using Lily's `garden` via:
 
 `garden install github FascinatedBox/spawni`
 */
+#include "lily_api_embed.h"
+#include "lily_api_msgbuf.h"
+#include "lily_api_value.h"
 
-/**
-class Interpreter
-
-This class wraps over an interpreter, providing useful methods.
-*/
-typedef struct {
+/** Begin autogen section. **/
+typedef struct lily_spawni_Interpreter_ {
     LILY_FOREIGN_HEADER
     lily_state *subi;
 } lily_spawni_Interpreter;
+#define ARG_Interpreter(state, index) \
+(lily_spawni_Interpreter *)lily_arg_generic(state, index)
+#define ID_Interpreter(state) lily_cid_at(state, 0)
+#define INIT_Interpreter(state)\
+(lily_spawni_Interpreter *) lily_new_foreign(state, ID_Interpreter(state), (lily_destroy_func)destroy_Interpreter, sizeof(lily_spawni_Interpreter))
+
+const char *lily_spawni_table[] = {
+    "\01Interpreter\0"
+    ,"C\06Interpreter"
+    ,"m\0<new>\0:Interpreter"
+    ,"m\0error\0:String"
+    ,"m\0error_message\0:String"
+    ,"m\0parse_expr\0(String,String):Option[String]"
+    ,"m\0parse_file\0(String):Boolean"
+    ,"m\0parse_string\0(String,String):Boolean"
+    ,"Z"
+};
+#define Interpreter_OFFSET 1
+void lily_spawni_Interpreter_new(lily_state *);
+void lily_spawni_Interpreter_error(lily_state *);
+void lily_spawni_Interpreter_error_message(lily_state *);
+void lily_spawni_Interpreter_parse_expr(lily_state *);
+void lily_spawni_Interpreter_parse_file(lily_state *);
+void lily_spawni_Interpreter_parse_string(lily_state *);
+void *lily_spawni_loader(lily_state *s, int id)
+{
+    switch (id) {
+        case Interpreter_OFFSET + 1: return lily_spawni_Interpreter_new;
+        case Interpreter_OFFSET + 2: return lily_spawni_Interpreter_error;
+        case Interpreter_OFFSET + 3: return lily_spawni_Interpreter_error_message;
+        case Interpreter_OFFSET + 4: return lily_spawni_Interpreter_parse_expr;
+        case Interpreter_OFFSET + 5: return lily_spawni_Interpreter_parse_file;
+        case Interpreter_OFFSET + 6: return lily_spawni_Interpreter_parse_string;
+        default: return NULL;
+    }
+}
+/** End autogen section. **/
+
+/**
+foreign class Interpreter() {
+    layout {
+        lily_state *subi;
+    }
+}
+
+This class wraps over an interpreter, providing useful methods. Each interpreter
+created is completely separate from the rest, and creating a sub interpreter
+does not have side-effects.
+
+The parse methods of this class will all execute code on success. On failure,
+they will rewind state. In theory, variables declared in a failed parse should
+not be available to subsequent passes.
+*/
 
 static void destroy_Interpreter(lily_spawni_Interpreter *lsi)
 {
     lily_free_state(lsi->subi);
 }
 
-/**
-constructor Interpreter: Interpreter
-
-Constructs a new `Interpreter`. This operation does not have any side-effects,
-except the underlying allocation required. It is therefore possible to create as
-many `Interpreter` instances as one may need.
-
-The parse methods of this class will all execute code on success. On failure,
-they will rewind state. In theory, variables declared in a failed parse should
-not be available to subsequent passes.
-*/
 void lily_spawni_Interpreter_new(lily_state *s)
 {
     lily_spawni_Interpreter *lsi = INIT_Interpreter(s);
@@ -48,7 +83,7 @@ void lily_spawni_Interpreter_new(lily_state *s)
 }
 
 /**
-method Interpreter.error(self: Interpreter): String
+define Interpreter.error: String
 
 Get the full error (message and traceback) from the last parse. If there is no
 error, then the result is a `String`.
@@ -61,7 +96,7 @@ void lily_spawni_Interpreter_error(lily_state *s)
 }
 
 /**
-method Interpreter.error_message(self: Interpreter): String
+define Interpreter.error_message: String
 
 Get just the error message of the last parse as a `String`. If there is no
 error, then the result is an empty `String`.
@@ -75,7 +110,7 @@ void lily_spawni_Interpreter_error_message(lily_state *s)
 }
 
 /**
-method Interpreter.parse_expr(self: Interpreter, context: String, data: String): Option[String]
+define Interpreter.parse_expr(context: String, data: String): Option[String]
 
 This parses `data` as an expression that has a result.
 
@@ -107,7 +142,7 @@ void lily_spawni_Interpreter_parse_expr(lily_state *s)
 }
 
 /**
-method Interpreter.parse_file(self: Interpreter, filename: String): Boolean
+define Interpreter.parse_file(filename: String): Boolean
 
 This attempts to open `filename` and parse it. If parsing succeeds, then the
 interpreter will attempt to execute the instructions.
@@ -121,7 +156,7 @@ void lily_spawni_Interpreter_parse_file(lily_state *s)
 }
 
 /**
-method Interpreter.parse_string(self: Interpreter, context: String, data: String): Boolean
+define Interpreter.parse_string(context: String, data: String): Boolean
 
 This parses the content of `data` as-is. `context` is used as the source
 filename in the event of an error.
@@ -134,4 +169,3 @@ void lily_spawni_Interpreter_parse_string(lily_state *s)
 
     lily_return_boolean(s, lily_parse_string(lsi->subi, context, text));
 }
-#include "dyna_spawni.h"
