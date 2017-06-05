@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <title>spawni.Interpreter : Lily</title>
+        <link href="../docstyle.css" rel="stylesheet">
+    </head>
+
+    <body role="document">
+        <section id='main'>
+<h1>Class Interpreter</h1>
+<pre>(foreign) class Interpreter {
+    lily_state *subi;
+}</pre>
+<div class='doc'><p>
+This class wraps over an interpreter, providing useful methods. Each interpreter
+created is completely separate from the rest, and creating a sub interpreter
+does not have side-effects.</p>
+<p>The parse methods of this class will all execute code on success. On failure,
+they will rewind state. In theory, variables declared in a failed parse should
+not be available to subsequent passes.</p></div>
+<h2>Methods</h2>
+<h3 id='method.&lt;new&gt;'><code>define <a href='#method.&lt;new&gt;'>&lt;new&gt;</a>: <a href='class.Interpreter.html'>Interpreter</a> <i>constructor</i></code></h3>
+<div class='doc'><p></p></div>
+<h3 id='method.error'><code>define <a href='#method.error'>error</a>: String</code></h3>
+<div class='doc'><p>
+Get the full error (message and traceback) from the last parse. If there is no
+error, then the result is a <code>String</code>.</p></div>
+<h3 id='method.error_message'><code>define <a href='#method.error_message'>error_message</a>: String</code></h3>
+<div class='doc'><p>
+Get just the error message of the last parse as a <code>String</code>. If there is no
+error, then the result is an empty <code>String</code>.</p></div>
+<h3 id='method.parse_expr'><code>define <a href='#method.parse_expr'>parse_expr</a>(context: String, data: String): Option[String]</code></h3>
+<div class='doc'><p>
+This parses <code>data</code> as an expression that has a result.</p>
+<p>On success, a <code>Some</code> is returned with the result of the expression turned into a
+<code>String</code>. The <code>String</code> may be empty if the expression returned an empty result.</p>
+<p>On failure, a <code>None</code> is returned.</p></div>
+<h3 id='method.parse_file'><code>define <a href='#method.parse_file'>parse_file</a>(filename: String): Boolean</code></h3>
+<div class='doc'><p>
+This attempts to open <code>filename</code> and parse it. If parsing succeeds, then the
+interpreter will attempt to execute the instructions.</p></div>
+<h3 id='method.parse_string'><code>define <a href='#method.parse_string'>parse_string</a>(context: String, data: String): Boolean</code></h3>
+<div class='doc'><p>
+This parses the content of <code>data</code> as-is. <code>context</code> is used as the source
+filename in the event of an error.</p></div>
+        </section>
+    </body>
+</html>
