@@ -14,6 +14,7 @@ This can be installed using Lily's `garden` via:
 typedef struct lily_spawni_Interpreter_ {
     LILY_FOREIGN_HEADER
     lily_state *subi;
+    lily_config config;
 } lily_spawni_Interpreter;
 #define ARG_Interpreter(state, index) \
 (lily_spawni_Interpreter *)lily_arg_generic(state, index)
@@ -57,6 +58,7 @@ void *lily_spawni_loader(lily_state *s, int id)
 foreign class Interpreter() {
     layout {
         lily_state *subi;
+        lily_config config;
     }
 }
 
@@ -77,7 +79,9 @@ static void destroy_Interpreter(lily_spawni_Interpreter *lsi)
 void lily_spawni_Interpreter_new(lily_state *s)
 {
     lily_spawni_Interpreter *lsi = INIT_Interpreter(s);
-    lsi->subi = lily_new_state();
+
+    lily_init_config(&lsi->config);
+    lsi->subi = lily_new_state(&lsi->config);
 
     lily_return_foreign(s, (lily_foreign_val *)lsi);
 }
