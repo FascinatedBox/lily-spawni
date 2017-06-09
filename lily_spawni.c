@@ -25,11 +25,11 @@ const char *lily_spawni_table[] = {
     "\01Interpreter\0"
     ,"C\06Interpreter"
     ,"m\0<new>\0:Interpreter"
-    ,"m\0error\0:String"
-    ,"m\0error_message\0:String"
-    ,"m\0parse_expr\0(String,String):Option[String]"
-    ,"m\0parse_file\0(String):Boolean"
-    ,"m\0parse_string\0(String,String):Boolean"
+    ,"m\0error\0(Interpreter):String"
+    ,"m\0error_message\0(Interpreter):String"
+    ,"m\0parse_expr\0(Interpreter,String,String):Option[String]"
+    ,"m\0parse_file\0(Interpreter,String):Boolean"
+    ,"m\0parse_string\0(Interpreter,String,String):Boolean"
     ,"Z"
 };
 #define Interpreter_OFFSET 1
