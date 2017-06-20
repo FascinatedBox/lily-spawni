@@ -20,7 +20,7 @@ typedef struct lily_spawni_Interpreter_ {
 (lily_spawni_Interpreter *)lily_arg_generic(state, index)
 #define ID_Interpreter(state) lily_cid_at(state, 0)
 #define INIT_Interpreter(state)\
-(lily_spawni_Interpreter *) lily_new_foreign(state, ID_Interpreter(state), (lily_destroy_func)destroy_Interpreter, sizeof(lily_spawni_Interpreter))
+(lily_spawni_Interpreter *) lily_push_foreign(state, ID_Interpreter(state), (lily_destroy_func)destroy_Interpreter, sizeof(lily_spawni_Interpreter))
 
 const char *lily_spawni_table[] = {
     "\01Interpreter\0"
@@ -83,7 +83,7 @@ void lily_spawni_Interpreter_new(lily_state *s)
     lily_init_config(&lsi->config);
     lsi->subi = lily_new_state(&lsi->config);
 
-    lily_return_foreign(s, (lily_foreign_val *)lsi);
+    lily_return_top(s);
 }
 
 /**
@@ -96,7 +96,8 @@ void lily_spawni_Interpreter_error(lily_state *s)
 {
     lily_spawni_Interpreter *lsi = ARG_Interpreter(s, 0);
 
-    lily_return_string(s, lily_new_string(lily_get_error(lsi->subi)));
+    lily_push_string(s, lily_get_error(lsi->subi));
+    lily_return_top(s);
 }
 
 /**
@@ -109,8 +110,8 @@ void lily_spawni_Interpreter_error_message(lily_state *s)
 {
     lily_spawni_Interpreter *lsi = ARG_Interpreter(s, 0);
 
-    lily_return_string(s,
-            lily_new_string(lily_get_error_message(lsi->subi)));
+    lily_push_string(s, lily_get_error_message(lsi->subi)); 
+    lily_return_top(s);
 }
 
 /**
@@ -137,9 +138,10 @@ void lily_spawni_Interpreter_parse_expr(lily_state *s)
         if (out_text == NULL)
             out_text = "";
 
-        lily_container_val *somev = lily_new_some();
-        lily_nth_set(somev, 0, lily_box_string(s, lily_new_string(out_text)));
-        lily_return_variant(s, somev);
+        lily_container_val *somev = lily_push_some(s);
+        lily_push_string(s, out_text);
+        lily_con_set_from_stack(s, somev, 0);
+        lily_return_top(s);
     }
     else
         lily_return_none(s);
