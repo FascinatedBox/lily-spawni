@@ -6,9 +6,8 @@ This can be installed using Lily's `garden` via:
 
 `garden install github FascinatedBox/spawni`
 */
-#include "lily_api_embed.h"
-#include "lily_api_msgbuf.h"
-#include "lily_api_value.h"
+
+#include "lily.h"
 
 /** Begin autogen section. **/
 typedef struct lily_spawni_Interpreter_ {
@@ -80,7 +79,7 @@ void lily_spawni_Interpreter_new(lily_state *s)
 {
     lily_spawni_Interpreter *lsi = INIT_Interpreter(s);
 
-    lily_init_config(&lsi->config);
+    lily_config_init(&lsi->config);
     lsi->subi = lily_new_state(&lsi->config);
 
     lily_return_top(s);
@@ -96,7 +95,7 @@ void lily_spawni_Interpreter_error(lily_state *s)
 {
     lily_spawni_Interpreter *lsi = ARG_Interpreter(s, 0);
 
-    lily_push_string(s, lily_get_error(lsi->subi));
+    lily_push_string(s, lily_error_message(lsi->subi));
     lily_return_top(s);
 }
 
@@ -110,7 +109,7 @@ void lily_spawni_Interpreter_error_message(lily_state *s)
 {
     lily_spawni_Interpreter *lsi = ARG_Interpreter(s, 0);
 
-    lily_push_string(s, lily_get_error_message(lsi->subi)); 
+    lily_push_string(s, lily_error_message_no_trace(lsi->subi)); 
     lily_return_top(s);
 }
 
