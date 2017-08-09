@@ -1,6 +1,6 @@
 # Binary junk
 
-spawni.so
+src/spawni.so
 
 # CMake-related stuff.
 CMakeFiles
