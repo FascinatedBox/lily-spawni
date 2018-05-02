@@ -1,0 +1,7 @@
+{
+    "version": "v0.2.0",
+    "summary": "Create an interpreter within an interpreter.",
+    "source": "https://github.com/FascinatedBox/lily-spawni",
+    "license": "MIT",
+    "native": false
+}
