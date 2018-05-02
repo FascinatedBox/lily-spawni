@@ -21,7 +21,7 @@ typedef struct lily_spawni_Interpreter_ {
 #define INIT_Interpreter(state)\
 (lily_spawni_Interpreter *) lily_push_foreign(state, ID_Interpreter(state), (lily_destroy_func)destroy_Interpreter, sizeof(lily_spawni_Interpreter))
 
-const char *lily_spawni_table[] = {
+const char *lily_spawni_info_table[] = {
     "\01Interpreter\0"
     ,"C\06Interpreter\0"
     ,"m\0<new>\0: Interpreter"
@@ -39,18 +39,16 @@ void lily_spawni_Interpreter_error_message(lily_state *);
 void lily_spawni_Interpreter_parse_expr(lily_state *);
 void lily_spawni_Interpreter_parse_file(lily_state *);
 void lily_spawni_Interpreter_parse_string(lily_state *);
-void *lily_spawni_loader(lily_state *s, int id)
-{
-    switch (id) {
-        case Interpreter_OFFSET + 1: return lily_spawni_Interpreter_new;
-        case Interpreter_OFFSET + 2: return lily_spawni_Interpreter_error;
-        case Interpreter_OFFSET + 3: return lily_spawni_Interpreter_error_message;
-        case Interpreter_OFFSET + 4: return lily_spawni_Interpreter_parse_expr;
-        case Interpreter_OFFSET + 5: return lily_spawni_Interpreter_parse_file;
-        case Interpreter_OFFSET + 6: return lily_spawni_Interpreter_parse_string;
-        default: return NULL;
-    }
-}
+void (*lily_spawni_call_table[])(lily_state *s) = {
+    NULL,
+    NULL,
+    lily_spawni_Interpreter_new,
+    lily_spawni_Interpreter_error,
+    lily_spawni_Interpreter_error_message,
+    lily_spawni_Interpreter_parse_expr,
+    lily_spawni_Interpreter_parse_file,
+    lily_spawni_Interpreter_parse_string,
+};
 /** End autogen section. **/
 
 /**
