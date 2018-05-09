@@ -32,14 +32,13 @@ const char *lily_spawni_info_table[] = {
     ,"m\0parse_string\0(Interpreter,String,String): Boolean"
     ,"Z"
 };
-#define Interpreter_OFFSET 1
 void lily_spawni_Interpreter_new(lily_state *);
 void lily_spawni_Interpreter_error(lily_state *);
 void lily_spawni_Interpreter_error_message(lily_state *);
 void lily_spawni_Interpreter_parse_expr(lily_state *);
 void lily_spawni_Interpreter_parse_file(lily_state *);
 void lily_spawni_Interpreter_parse_string(lily_state *);
-void (*lily_spawni_call_table[])(lily_state *s) = {
+lily_call_entry_func lily_spawni_call_table[] = {
     NULL,
     NULL,
     lily_spawni_Interpreter_new,
